@@ -13,7 +13,7 @@ const CORS_HEADERS = {
 
 const STAR_T_GATE_MANIFEST = {
   id: "STAR-T-GATE-MANIFEST-001",
-  manifest_version: "0.3.0",
+  manifest_version: "0.3.1",
   type: "governed_ai_navigation_manifest",
   status: "public_entry",
   name: "STAR-T-GATE",
@@ -255,6 +255,40 @@ const STAR_T_GATE_MANIFEST = {
     ],
 
     valid_types: [...ALLOWED_TYPES],
+
+    observation_rule: {
+      principle:
+        "Material learning discovered while using, reviewing, testing, or executing a governed workflow shall be evaluated for contribution. Observation does not by itself establish a governance gap.",
+
+      sequence: [
+        "OBSERVE",
+        "CHECK_CURRENT_GOVERNED_STATE",
+        "CLASSIFY",
+        "SUBMIT_IF_MATERIAL_GAP_OR_REUSABLE_EVIDENCE"
+      ],
+
+      rules: [
+        "Before submitting an apparent governance gap, inspect the current governed repository and its operative instructions to determine whether the observed behavior is already governed.",
+
+        "If the repository already governs the behavior and the operating AI failed to follow it, classify the observation as an execution or conformance failure rather than as a missing governance rule.",
+
+        "A material execution or conformance failure may still be submitted as reusable evidence when it shows that a governed instruction is repeatedly, plausibly, or materially misexecuted and curator review could improve clarity, testability, or enforcement.",
+
+        "If the observation exposes a genuine missing rule, ambiguity, contradiction, authority gap, validation gap, routing problem, missing state or transition, missing evidence requirement, or reusable workflow improvement, submit it through the STAR-T-GATE intake endpoint.",
+
+        "Do not create a governed-repository change directly as a consequence of an observation. The STAR-T-GATE Inbox is the public contribution boundary and curator review determines whether governed knowledge changes.",
+
+        "Use the intake schema published by schema_endpoint. Do not invent unsupported intake fields.",
+
+        "Select the most appropriate target and contribution type supported by the intake schema. Use target unknown when repository ownership cannot yet be established.",
+
+        "Preserve enough provenance, evidence, source context, and reproduction information for a curator to distinguish a governance gap from an execution failure.",
+
+        "A successful submission remains uncurated evidence and does not become governed authority until curator review.",
+
+        "If submission fails, do not claim that the observation was recorded. Preserve or return a complete Worker-compatible payload for retry."
+      ]
+    },
 
     fallback_if_https_post_unavailable:
       "Return a complete Worker-compatible JSON payload to the user. Do not invent an alternate direct-write route.",

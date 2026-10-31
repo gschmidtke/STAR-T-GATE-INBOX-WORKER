@@ -13,7 +13,7 @@ const CORS_HEADERS = {
 
 const STAR_T_GATE_MANIFEST = {
   id: "STAR-T-GATE-MANIFEST-001",
-  manifest_version: "0.2.1",
+  manifest_version: "0.2.2",
   type: "governed_ai_navigation_manifest",
   status: "public_entry",
   name: "STAR-T-GATE",
@@ -38,6 +38,8 @@ const STAR_T_GATE_MANIFEST = {
   core_principles: [
     "understand_before_routing",
     "natural_language_in_internal_routing",
+    "route_by_unresolved_authority_layer",
+    "external_evidence_is_not_a_routing_destination",
     "governed_knowledge_before_model_knowledge",
     "repository_rules_govern_after_handoff",
     "resolve_canonical_pointers_before_substantive_work",
@@ -130,6 +132,16 @@ const STAR_T_GATE_MANIFEST = {
 
       "Ask a routing clarification only when ownership remains genuinely ambiguous after applying the system definitions; ask only for the missing fact needed to resolve ownership, not for a repository choice.",
 
+      "Determine repository ownership by the highest materially unresolved authority layer of the task, not by whether that repository contains every domain fact or external fact that may ultimately be needed.",
+
+      "A governed repository may require external evidence while remaining the governing execution context. External primary authority, authoritative secondary material, web research, codes, regulations, product data, site facts, or other outside sources are evidence sources, not alternative STAR-T-GATE routing destinations.",
+
+      "A user statement proposing a project, structure, form, technology, size, method, or configuration is not by itself a request for feasibility or compliance determination. If purpose or required outcome remains unresolved, route first to USG and treat the stated form or method as a candidate means unless the user explicitly declares it a requirement with a basis.",
+
+      "Route directly to normative governance only when the user's actual question is explicitly normative, such as whether something is permitted, required, compliant, approved, governed by a named authority, or constrained by a standard.",
+
+      "Do not perform external evidence acquisition before the currently governing repository's workflow reaches a step that requires or authorizes that evidence.",
+
       "Start at the highest materially unresolved layer.",
 
       "Do not invoke every layer unless the task requires it.",
@@ -167,6 +179,8 @@ const STAR_T_GATE_MANIFEST = {
       "After selecting an owning repository, load its declared agent contract or repository instruction file.",
 
       "Follow repository-local instructions before performing substantive work.",
+
+      "When the governing repository requires external facts or authority, acquire those sources as evidence from within that repository's workflow; do not treat the external source as a replacement governing repository.",
 
       "If repository instructions identify CURRENT, canonical, protocol, source-of-truth, registry, schema, index, or another governing pointer, resolve that pointer before acting.",
 
@@ -409,7 +423,7 @@ async function createGitHubIssue(env, s, request) {
         "Accept": "application/vnd.github+json",
         "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
         "X-GitHub-Api-Version": "2026-03-10",
-        "User-Agent": "STAR-T-GATE-Inbox-Worker/0.2.2",
+        "User-Agent": "STAR-T-GATE-Inbox-Worker/0.2.3",
         "Content-Type": "application/json"
       },
 
@@ -469,7 +483,7 @@ export default {
       return jsonResponse({
         ok: true,
         service: "STAR-T-GATE Inbox",
-        version: "0.2.2",
+        version: "0.2.3",
         manifest:
           "https://star-t-gate-inbox-worker.white-bar-0318.workers.dev/manifest"
       });

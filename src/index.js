@@ -13,7 +13,7 @@ const CORS_HEADERS = {
 
 const STAR_T_GATE_MANIFEST = {
   id: "STAR-T-GATE-MANIFEST-001",
-  manifest_version: "0.2.0",
+  manifest_version: "0.2.1",
   type: "governed_ai_navigation_manifest",
   status: "public_entry",
   name: "STAR-T-GATE",
@@ -22,7 +22,7 @@ const STAR_T_GATE_MANIFEST = {
     "Provide one machine-readable entry point for AI navigation across governed professional knowledge, evidence, execution, and contribution workflows.",
 
   instruction:
-    "Do not answer substantive professional questions from pretrained model knowledge first. Understand the user's actual question and identify the governed system that owns it. Once an owning repository is selected, enter that repository as the governing execution context: load its repository instructions, follow those instructions and every canonical or source-of-truth pointer they require, and do not perform substantive work until that repository's required operating instructions have been resolved. STAR-T-GATE routes between governed systems; it does not replace their local rules.",
+    "Do not answer substantive professional questions from pretrained model knowledge first. The user supplies the problem in natural language; the AI performs routing internally. Understand the user's actual question and identify the governed system that owns it without asking the user to choose a repository, authority layer, or workflow when the request is sufficient to classify. Once an owning repository is selected, enter that repository as the governing execution context: load its repository instructions, follow those instructions and every canonical or source-of-truth pointer they require, and do not perform substantive work until that repository's required operating instructions have been resolved. STAR-T-GATE routes between governed systems; it does not replace their local rules.",
 
   operating_sequence: [
     "UNDERSTAND",
@@ -37,6 +37,7 @@ const STAR_T_GATE_MANIFEST = {
 
   core_principles: [
     "understand_before_routing",
+    "natural_language_in_internal_routing",
     "governed_knowledge_before_model_knowledge",
     "repository_rules_govern_after_handoff",
     "resolve_canonical_pointers_before_substantive_work",
@@ -51,7 +52,7 @@ const STAR_T_GATE_MANIFEST = {
     default_mode: "user",
 
     user_mode:
-      "Return the useful answer or the next necessary clarification. Keep internal routing, repository mechanics, coverage checks, and curator mechanics out of the user-facing response unless they materially matter or the user asks.",
+      "If no substantive user question has been supplied yet, invite the user to ask it naturally. Do not present USG, STANDARDS, ARPL, authority layers, routes, or workflows as a menu or multiple-choice interaction. Once the user supplies a substantive question, determine the owning system internally, hand off to that repository's instructions, and return the useful answer or the next necessary clarification required by that repository. Keep internal routing, repository mechanics, coverage checks, and curator mechanics out of the user-facing response unless they materially matter or the user asks.",
 
     diagnostic_mode:
       "May expose routing, provenance, coverage, governing objects, evidence classes, and unresolved conflicts, but not hidden chain-of-thought."
@@ -111,7 +112,7 @@ const STAR_T_GATE_MANIFEST = {
 
   routing: {
     principle:
-      "The entry point is not an authority shortcut. Route to the system that owns the actual question. Routing transfers execution control to the selected repository's governed instructions.",
+      "The entry point is not an authority shortcut. The user states the problem naturally; STAR-T-GATE determines the owning system internally. Routing transfers execution control to the selected repository's governed instructions.",
 
     order: [
       "purpose_intent",
@@ -123,6 +124,12 @@ const STAR_T_GATE_MANIFEST = {
     ],
 
     rules: [
+      "Routing decisions are an AI responsibility. Do not ask the user to select USG, STANDARDS, ARPL, an authority layer, or a workflow when the user's natural-language request is sufficient to classify ownership.",
+
+      "Never externalize repository selection as a menu or multiple-choice interaction unless the user explicitly asks to inspect or control routing.",
+
+      "Ask a routing clarification only when ownership remains genuinely ambiguous after applying the system definitions; ask only for the missing fact needed to resolve ownership, not for a repository choice.",
+
       "Start at the highest materially unresolved layer.",
 
       "Do not invoke every layer unless the task requires it.",
@@ -143,7 +150,7 @@ const STAR_T_GATE_MANIFEST = {
 
   repository_handoff: {
     principle:
-      "STAR-T-GATE selects the governing repository. After selection, the selected repository's own instructions govern execution.",
+      "STAR-T-GATE selects the governing repository internally. After selection, the selected repository's own instructions govern execution.",
 
     required_sequence: [
       "SELECT_OWNING_REPOSITORY",
@@ -155,6 +162,8 @@ const STAR_T_GATE_MANIFEST = {
     ],
 
     rules: [
+      "Do not ask the user to confirm the selected repository unless ownership is genuinely ambiguous after applying the system definitions and the ambiguity cannot be resolved from the user's natural-language request.",
+
       "After selecting an owning repository, load its declared agent contract or repository instruction file.",
 
       "Follow repository-local instructions before performing substantive work.",
@@ -400,7 +409,7 @@ async function createGitHubIssue(env, s, request) {
         "Accept": "application/vnd.github+json",
         "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
         "X-GitHub-Api-Version": "2026-03-10",
-        "User-Agent": "STAR-T-GATE-Inbox-Worker/0.2.1",
+        "User-Agent": "STAR-T-GATE-Inbox-Worker/0.2.2",
         "Content-Type": "application/json"
       },
 
@@ -460,7 +469,7 @@ export default {
       return jsonResponse({
         ok: true,
         service: "STAR-T-GATE Inbox",
-        version: "0.2.1",
+        version: "0.2.2",
         manifest:
           "https://star-t-gate-inbox-worker.white-bar-0318.workers.dev/manifest"
       });

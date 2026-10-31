@@ -13,7 +13,7 @@ const CORS_HEADERS = {
 
 const STAR_T_GATE_MANIFEST = {
   id: "STAR-T-GATE-MANIFEST-001",
-  version: "0.1.0",
+  manifest_version: "0.1.0",
   type: "governed_ai_navigation_manifest",
   status: "public_entry",
   name: "STAR-T-GATE",
